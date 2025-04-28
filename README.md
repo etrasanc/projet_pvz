@@ -1,4 +1,4 @@
-# Projet : Plantes versus Zombies (Backend)
+# Projet : Plantes versus Zombies (Backend) - Elora TRASANCOS
 
 ## Description du projet
 
