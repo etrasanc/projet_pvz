@@ -27,7 +27,6 @@ public class MapDAOTest {
         dataSource.setPassword("");
         jdbcTemplate = new JdbcTemplate(dataSource);
 
-        // Créer les tables nécessaires
         jdbcTemplate.execute("DROP TABLE IF EXISTS Map");
         jdbcTemplate.execute("DROP TABLE IF EXISTS zombie");  // Ajoute cette ligne pour supprimer la table zombie s'il y en a une
         jdbcTemplate.execute("CREATE TABLE Map (" +
@@ -44,9 +43,8 @@ public class MapDAOTest {
                 "degat_attaque INT, " +
                 "vitesse_de_deplacement DOUBLE, " +
                 "id_map INT, " +
-                "chemin_image VARCHAR(255))");  // Crée la table zombie si elle n'existe pas
+                "chemin_image VARCHAR(255))");
 
-        // Initialisation du DAO avec JdbcTemplate
         mapDAO = new MapDAOImpl(jdbcTemplate);
         zombieDAO = new ZombieDAOImpl(jdbcTemplate);
     }
@@ -54,16 +52,12 @@ public class MapDAOTest {
 
     @Test
     public void testSaveAndFindById() {
-        // Création d'une nouvelle Map
         Map map = new Map(5, 10, "path/to/image.png");
 
-        // Sauvegarde de la map
         mapDAO.save(map);
 
-        // Vérification que l'id a bien été généré
         assertNotNull(map.getId_map());
 
-        // Recherche de la map par son id
         Map foundMap = mapDAO.findById(map.getId_map());
         assertNotNull(foundMap);
         assertEquals(5, foundMap.getLigne());
@@ -73,31 +67,26 @@ public class MapDAOTest {
 
     @Test
     public void testFindAll() {
-        // Création et insertion de 2 maps
         Map map1 = new Map(5, 10, "path/to/image1.png");
         Map map2 = new Map(6, 12, "path/to/image2.png");
 
         mapDAO.save(map1);
         mapDAO.save(map2);
 
-        // Vérification de la taille de la liste
         List<Map> maps = mapDAO.findAll();
         assertEquals(2, maps.size());
     }
 
     @Test
     public void testUpdate() {
-        // Création et insertion d'une map
         Map map = new Map(5, 10, "path/to/image.png");
         mapDAO.save(map);
 
-        // Modification des attributs de la map
         map.setLigne(15);
         map.setColonne(20);
         map.setChemin_image("new/path/to/image.jpg");
         mapDAO.update(map);
 
-        // Récupération de la map mise à jour
         Map updatedMap = mapDAO.findById(map.getId_map());
         assertEquals(15, updatedMap.getLigne());
         assertEquals(20, updatedMap.getColonne());
@@ -106,18 +95,14 @@ public class MapDAOTest {
 
     @Test
     public void testDelete() {
-        // Création et insertion d'une map
         Map map = new Map(5, 10, "path/to/image.png");
         mapDAO.save(map);
 
-        // Vérification que la map a été ajoutée
         List<Map> mapsBefore = mapDAO.findAll();
         int countBefore = mapsBefore.size();
 
-        // Suppression de la map
         mapDAO.delete(map.getId_map());
 
-        // Vérification qu'il y a une map en moins
         List<Map> mapsAfter = mapDAO.findAll();
         int countAfter = mapsAfter.size();
 
@@ -126,11 +111,9 @@ public class MapDAOTest {
 
     @Test
     public void testExistsById() {
-        // Création et insertion d'une map
         Map map = new Map(5, 10, "path/to/image.png");
         mapDAO.save(map);
 
-        // Vérification que la map existe
         assertTrue(mapDAO.existsById(map.getId_map()));
 
         // Vérification d'une map qui n'existe pas
